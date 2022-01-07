@@ -1,36 +1,30 @@
 import './App.css';
 
-import { Component } from 'react';
-import { Searchbar } from './components/Searchbar';
-import { ImageGallery } from './components/ImageGallery';
-import Button from './components/Button';
+import React, { Component } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Searchbar from './components/Searchbar';
+import ImageGallery from './components/ImageGallery';
 
-class App extends Component {
+export default class App extends Component {
   state = {
-    images: [],
-    search: '',
-    currentPage: 0,
+    searchQuery: '',
   };
 
-  setPage = page => {
-    this.setState(() => ({ currentPage: page + 1 }));
-    console.log(this.state.currentPage);
-  };
-
-  searchString = data => {
-    this.setState({ currentPage: 0, search: data.search });
-    console.log(this.state.search);
+  handleSearchFormSubmit = searchQuery => {
+    this.setState({ searchQuery });
   };
 
   render() {
     return (
       <div className="App">
-        <Searchbar onSubmit={this.searchString} />
         <h1 className="Title">Image finder</h1>
-        <ImageGallery images={this.state.images} />
-        <Button page={this.state.currentPage} onLeaveFeedback={this.setPage} />
+        <>
+          <Searchbar onSubmit={this.handleSearchFormSubmit} />
+          <ImageGallery searchQuery={this.state} />
+          <ToastContainer />
+        </>
       </div>
     );
   }
 }
-export default App;

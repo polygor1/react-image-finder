@@ -2,21 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './Button.module.css';
 
-export default function Button({ page, onLeaveFeedback }) {
+export default function Button({ onLeaveFeedback }) {
   return (
-    <section className={styles.buttonsList}>
-      <button
-        key={page}
-        className={styles.Button}
-        onClick={() => onLeaveFeedback(page)}
-      >
-        Load more
-      </button>
-    </section>
+    <button
+      type="button"
+      className={styles.Button}
+      onClick={() => onLeaveFeedback()}
+    >
+      Load more
+    </button>
   );
 }
 
 Button.propTypes = {
-  page: PropTypes.number.isRequired,
   onLeaveFeedback: PropTypes.func.isRequired,
 };

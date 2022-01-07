@@ -1,33 +1,28 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from './Searchbar.module.css';
-import { nanoid } from 'nanoid';
-
-const INITIAL_STATE = {
-  search: '',
-};
+import { toast } from 'react-toastify';
 
 export class Searchbar extends Component {
-  state = { ...INITIAL_STATE };
-
-  inputId = nanoid();
+  state = {
+    query: '',
+  };
 
   handleChange = event => {
     // отображалка для поля ввода
-    const { name, value } = event.currentTarget;
-    this.setState({ [name]: value });
+    this.setState({ query: event.currentTarget.value.toLowerCase() });
   };
 
   handleSubmit = event => {
-    // отсылалка данных из полей формы
+    const { query } = this.state;
     event.preventDefault();
-    this.props.onSubmit({ ...this.state });
-    this.reset();
-  };
-
-  reset = () => {
-    // опустошалка полей ввода
-    this.setState({ ...INITIAL_STATE });
+    // если пустышка - ругаемся
+    if (query.trim() === '') {
+      toast.error('Please, enter search query.');
+      return;
+    }
+    this.props.onSubmit(query);
+    this.setState({ query: '' });
   };
 
   render() {
@@ -39,14 +34,12 @@ export class Searchbar extends Component {
           </button>
 
           <input
-            id={this.inputId}
             className={styles.SearchFormInput}
             type="text"
-            name="search"
-            // autocomplete="off"
-            // autofocus
+            autocomplete="off"
+            autofocus
             placeholder="Search images and photos"
-            value={this.state.search}
+            value={this.state}
             onChange={this.handleChange}
           />
         </form>
