@@ -21,7 +21,7 @@ export default class App extends Component {
         <h1 className="Title">Image finder</h1>
         <>
           <Searchbar onSubmit={this.handleSearchFormSubmit} />
-          <ImageGallery searchQuery={this.state} />
+          <ImageGallery searchQuery={this.state.searchQuery} />
           <ToastContainer />
         </>
       </div>

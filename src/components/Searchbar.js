@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styles from './Searchbar.module.css';
 import { toast } from 'react-toastify';
 
-export class Searchbar extends Component {
+export default class Searchbar extends Component {
   state = {
     query: '',
   };
@@ -36,10 +36,8 @@ export class Searchbar extends Component {
           <input
             className={styles.SearchFormInput}
             type="text"
-            autocomplete="off"
-            autofocus
             placeholder="Search images and photos"
-            value={this.state}
+            value={this.state.query}
             onChange={this.handleChange}
           />
         </form>

@@ -2,18 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styles from './ImageGallery.module.css';
 
-import { getList } from './getList';
-import { ImageGalleryItem } from './ImageGalleryItem';
-import Loader from 'components/Loader';
-import ErrorSearch from 'components/ErrorSearch';
-import LoadMoreBtn from 'components/LoadMoreBtn';
-import Modal from 'components/Modal';
+import GetList from './GetList';
+import ImageGalleryItem from './ImageGalleryItem';
+import Loader from './Loader';
+import ErrorSearch from './ErrorSearch';
+import Modal from './Modal';
+import Button from './Button';
 
 export default class ImageGallery extends Component {
-  static propTypes = {
-    searchQuery: PropTypes.string,
-  };
-
   state = {
     images: [],
     page: 1,
@@ -28,24 +24,27 @@ export default class ImageGallery extends Component {
     const nextQuery = this.props.searchQuery;
 
     if (prevQuery !== nextQuery) {
-      await this.reset();
+      this.reset();
       this.setState({ status: 'pending' });
       this.fetchImages(nextQuery);
     }
   }
 
   fetchImages = nextQuery => {
-    const { page } = this.state;
-    getList
-      .fetchImg(nextQuery, page)
+    GetList(nextQuery, this.state.page)
       .then(({ hits }) => {
         if (hits.length === 0) {
+          // если ничего не пришло в ответе
           return Promise.reject(new Error('Nothing found'));
+        } else {
+          console.log('page =', this.state.page); // номер листа в ответе
+
+          this.setState(prevState => ({
+            images: [...prevState.images, ...hits],
+            status: 'resolved',
+          }));
+          this.incrementPage();
         }
-        this.setState(prevState => ({
-          images: [...prevState.images, ...hits],
-          status: 'resolved',
-        }));
       })
       .catch(error => this.setState({ error, status: 'rejected' }));
   };
@@ -70,7 +69,6 @@ export default class ImageGallery extends Component {
 
   handleLoadBtnClick = async () => {
     const nextQuery = this.props.searchQuery;
-    await this.incrementPage();
     this.fetchImages(nextQuery);
     this.scrollDown();
   };
@@ -118,9 +116,13 @@ export default class ImageGallery extends Component {
               />
             ))}
           </ul>
-          <LoadMoreBtn handleLoadMore={this.handleLoadBtnClick} />
+          <Button onLeaveFeedback={this.handleLoadBtnClick} />
         </>
       );
     }
   }
 }
+
+ImageGallery.propTypes = {
+  searchQuery: PropTypes.string,
+};
