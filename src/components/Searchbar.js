@@ -22,7 +22,7 @@ export default class Searchbar extends Component {
       return;
     }
     this.props.onSubmit(query);
-    this.setState({ query: '' });
+    // this.setState({ query: '' });
   };
 
   render() {

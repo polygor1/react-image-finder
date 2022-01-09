@@ -24,26 +24,36 @@ export default class ImageGallery extends Component {
     const nextQuery = this.props.searchQuery;
 
     if (prevQuery !== nextQuery) {
+      console.log('new querry: ', nextQuery, ' page: ', this.state.page); //qpqpqpq
       this.reset();
+
+      // console.log('page Q =', this.state.page); // номер листа
+
       this.setState({ status: 'pending' });
       this.fetchImages(nextQuery);
+
+      console.log('Querry =', nextQuery); // qqqqqqqqqqqqqqqqqqqq
     }
   }
 
   fetchImages = nextQuery => {
-    GetList(nextQuery, this.state.page)
+    const { page } = this.state;
+    console.log('page Q =', page); // номер листа
+
+    GetList(nextQuery, page)
       .then(({ hits }) => {
         if (hits.length === 0) {
-          // если ничего не пришло в ответе
-          return Promise.reject(new Error('Nothing found'));
+          // если ничего не пришло в ответ
+          // this.reset();
+          return Promise.reject(new Error('Sorry, nothing found'));
         } else {
-          console.log('page =', this.state.page); // номер листа в ответе
+          console.log('pageA =', page); // номер листа в ответе
 
           this.setState(prevState => ({
             images: [...prevState.images, ...hits],
             status: 'resolved',
           }));
-          this.incrementPage();
+          this.incrementPage(); //++++++++++++++++++++++++++++++
         }
       })
       .catch(error => this.setState({ error, status: 'rejected' }));
@@ -55,6 +65,8 @@ export default class ImageGallery extends Component {
 
   reset = () => {
     this.setState({ page: 1, images: [] });
+
+    console.log('pageReset =', this.state.page); // номер листа reset
   };
 
   scrollDown = () => {
@@ -97,6 +109,7 @@ export default class ImageGallery extends Component {
     if (status === 'rejected') {
       return <ErrorSearch message={error.message} />;
     }
+
     if (status === 'resolved') {
       return (
         <>

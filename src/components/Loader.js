@@ -7,6 +7,7 @@ export default class App extends Component {
     return (
       <div>
         {/* <Loader type="Wath" color="#00BFFF" height={100} width={100} /> */}
+        <span>...WAIT...</span>
       </div>
     );
   }
