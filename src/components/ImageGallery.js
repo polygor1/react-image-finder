@@ -24,15 +24,18 @@ export default class ImageGallery extends Component {
     const nextQuery = this.props.searchQuery;
 
     if (prevQuery !== nextQuery) {
-      console.log('new querry: ', nextQuery, ' page: ', this.state.page); //qpqpqpq
-      this.reset();
+      // console.log('new querry: ', nextQuery, ' page: ', this.state.page); //qpqpqpq
+      await this.reset();
 
-      // console.log('page Q =', this.state.page); // номер листа
+      // await console.log(
+      //   'await new querry: ',
+      //   nextQuery,
+      //   ' page: ',
+      //   this.state.page,
+      // ); //qpqpqpq
 
       this.setState({ status: 'pending' });
       this.fetchImages(nextQuery);
-
-      console.log('Querry =', nextQuery); // qqqqqqqqqqqqqqqqqqqq
     }
   }
 
@@ -44,7 +47,6 @@ export default class ImageGallery extends Component {
       .then(({ hits }) => {
         if (hits.length === 0) {
           // если ничего не пришло в ответ
-          // this.reset();
           return Promise.reject(new Error('Sorry, nothing found'));
         } else {
           console.log('pageA =', page); // номер листа в ответе
@@ -53,7 +55,6 @@ export default class ImageGallery extends Component {
             images: [...prevState.images, ...hits],
             status: 'resolved',
           }));
-          this.incrementPage(); //++++++++++++++++++++++++++++++
         }
       })
       .catch(error => this.setState({ error, status: 'rejected' }));
@@ -81,6 +82,7 @@ export default class ImageGallery extends Component {
 
   handleLoadBtnClick = async () => {
     const nextQuery = this.props.searchQuery;
+    await this.incrementPage(); // ага, щас!
     this.fetchImages(nextQuery);
     this.scrollDown();
   };

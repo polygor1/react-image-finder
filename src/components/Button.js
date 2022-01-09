@@ -9,7 +9,7 @@ export default function Button({ onLeaveFeedback }) {
       className={styles.Button}
       onClick={() => onLeaveFeedback()}
     >
-      Load more
+      Load more ...
     </button>
   );
 }
